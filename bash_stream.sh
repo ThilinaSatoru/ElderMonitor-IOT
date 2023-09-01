@@ -1,0 +1,2 @@
+#!/bin/sh
+ffmpeg -f v4l2 -i /dev/videoX -c:v libx264 -preset ultrafast -tune zerolatency -b:v 2500k -maxrate 2500k -bufsize 5000k -pix_fmt yuv420p -g 60 -c:a aac -b:a 128k -ar 44100 -f flv rtmp://live.restream.io/live/re_6936174_861e4029bb068db58666
