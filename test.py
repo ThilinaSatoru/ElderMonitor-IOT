@@ -3,6 +3,7 @@ from gpiozero import MotionSensor
 import subprocess
 import time
 import datetime
+import requests
 
 # Pin Definitions:
 pirPin = 4
@@ -10,7 +11,10 @@ ledPin = 17
 sens = MotionSensor(pirPin)
 
 # commands bash
-stream = ['bash', './stream.sh']
+stream = ['bash', './bash_stream.sh']
+
+
+def api_post_image():
 
 
 def setup():
@@ -32,7 +36,7 @@ def getDateTimeNow():
 def take_picture():
     # commands bash
     arg1 = 'captures/' + str(getDateTimeNow()) + '.jpg'
-    capture = ['bash', './capture.sh', arg1]
+    capture = ['bash', './bash_capture.sh', arg1]
 
     print(arg1)
     subprocess.run(capture)
@@ -53,6 +57,7 @@ def motion(led):
         print(getDateTimeNow())
         take_picture()
         # POST
+
         sens.wait_for_no_motion()
 
 
@@ -61,17 +66,17 @@ def motion(led):
 # if alone stream.
 # else capture
 
+if __name__ == '__main__':
+    try:
+        setup()
+        motion(ledPin)
 
-try:
-    setup()
-    motion(ledPin)
+    except KeyboardInterrupt:  # If CTRL+C is pressed, exit cleanly:
+        print("Keyboard interrupt")
 
-except KeyboardInterrupt:  # If CTRL+C is pressed, exit cleanly:
-    print("Keyboard interrupt")
+    except Exception as e:
+        print("some error : " + str(e))
 
-except Exception as e:
-    print("some error : " + str(e))
-
-finally:
-    print("clean up")
-    GPIO.cleanup()  # cleanup all GPIO
+    finally:
+        print("clean up")
+        GPIO.cleanup()  # cleanup all GPIO
