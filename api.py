@@ -21,13 +21,13 @@ def hello():
 @app.route('/img', methods=['POST'])
 def upload_file():
     success = False
-    if 'files[]' not in request.files:
+    if 'file' not in request.files:
         resp = jsonify({'message': 'No File'})
         resp.status_code = 400
         success = False
         return resp
 
-    files = request.files.getlist('files[]')
+    files = request.files.getlist('file')
     for file in files:
         if file and file.name:
             filename = file.filename
